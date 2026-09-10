@@ -614,6 +614,27 @@ a:focus-visible {
   color: var(--pulse);
 }
 
+.not-found {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.not-found > p {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+}
+
+.not-found h1 {
+  margin: 0 0 3rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(5rem, 17vw, 15rem);
+  font-weight: 540;
+  letter-spacing: -0.085em;
+  line-height: 0.72;
+}
+
 @media (max-width: 960px) {
   .hero {
     grid-template-columns: repeat(8, minmax(0, 1fr));

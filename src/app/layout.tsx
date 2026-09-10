@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   title: "Ricky — Full-stack Developer",
   description:
     "Portfolio of Ricky, an Information Systems student and full-stack developer based in Bekasi and Bandung, Indonesia.",
+  authors: [{ name: "Ricky", url: "https://github.com/Radian-File" }],
+  creator: "Ricky",
+  openGraph: {
+    type: "website",
+    title: "Ricky — Full-stack Developer",
+    description: "Full-stack work across web, mobile, and AI-powered applications.",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

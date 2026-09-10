@@ -34,3 +34,9 @@ test("mobile layout does not overflow horizontally", async ({ page }) => {
   const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
 });
+
+test("unknown routes provide a clear way home", async ({ page }) => {
+  await page.goto("/work/not-a-project");
+  await expect(page.getByRole("heading", { name: "Nothing here." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Return home" })).toHaveAttribute("href", "/");
+});
