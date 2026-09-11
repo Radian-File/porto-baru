@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Manrope } from "next/font/google";
+import { PortfolioShell } from "@/components/portfolio-shell";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -29,7 +30,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${body.variable}`}>{children}</body>
+      <body className={`${display.variable} ${body.variable}`}>
+        <PortfolioShell>{children}</PortfolioShell>
+      </body>
     </html>
   );
 }

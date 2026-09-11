@@ -25,13 +25,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const next = projects[(index + 1) % projects.length];
 
   return (
-    <>
-      <header className="case-header frame">
-        <Link className="wordmark" href="/" aria-label="Ricky, return home">Ricky<span>.</span></Link>
-        <Link className="back-link" href="/#work">Back to selected work</Link>
-      </header>
-
-      <main className="case-main">
+      <main className="case-main" id="main-content">
+        <header className="case-header">
+          <Link className="back-link" href="/portfolio">Back to portfolio</Link>
+          <span>{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
+        </header>
         <section className="case-hero frame" aria-labelledby="project-title">
           <p className="case-context">Repository study · {project.contribution}</p>
           <h1 id="project-title">{project.name}</h1>
@@ -76,6 +74,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <Link href={`/work/${next.slug}`}>{next.name} <ArrowUpRight /></Link>
         </nav>
       </main>
-    </>
   );
 }
