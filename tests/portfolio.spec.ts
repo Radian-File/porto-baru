@@ -23,6 +23,7 @@ test("the same System Core persists through a portal transition", async ({ page 
   await expect(page).toHaveURL(/\/portfolio$/);
   await expect(page.locator(".portfolio-shell")).toHaveAttribute("data-route", "portfolio");
   await expect(page.locator(".system-core-visual canvas")).toHaveAttribute("data-persistence-token", "same-core");
+  await expect(page.locator("main#main-content")).toBeFocused();
 });
 
 test("project route presents evidence and source", async ({ page }) => {
@@ -51,10 +52,12 @@ test("reduced motion preserves readable content", async ({ browser }) => {
 });
 
 test("mobile layout does not overflow horizontally", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   for (const route of ["/", "/portfolio"]) {
     await page.goto(route);
     const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }));
     expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+    await expect(page.locator(".system-core-visual")).toHaveAttribute("data-quality", "low");
   }
 });
 

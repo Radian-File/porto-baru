@@ -1,4 +1,4 @@
-import { TransitionLink } from "@/components/portfolio-shell";
+import { TransitionLink } from "@/components/transition-link";
 
 export default function NotFound() {
   return (

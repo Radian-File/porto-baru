@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 
 const vertexShader = /* glsl */ `
@@ -63,6 +63,22 @@ const routeModes: Record<string, number> = {
   contact: 1.25,
 };
 
+class CoreErrorBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch() {
+    this.props.onError();
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 function StaticSystemCore() {
   return (
     <div className="system-core-static" aria-hidden="true">
@@ -81,11 +97,13 @@ function CoreObject({
   transitioning,
   reduced,
   pointer,
+  quality,
 }: {
   route: string;
   transitioning: boolean;
   reduced: boolean;
   pointer: React.RefObject<[number, number]>;
+  quality: "high" | "low";
 }) {
   const group = useRef<THREE.Group>(null);
   const shell = useRef<THREE.ShaderMaterial>(null);
@@ -101,7 +119,7 @@ function CoreObject({
   }), []);
 
   const particlePositions = useMemo(() => {
-    const count = 900;
+    const count = quality === "low" ? 440 : 900;
     const positions = new Float32Array(count * 3);
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
@@ -116,7 +134,7 @@ function CoreObject({
     }
 
     return positions;
-  }, []);
+  }, [quality]);
 
   useFrame((state, delta) => {
     if (!group.current || !shell.current || !particles.current) return;
@@ -156,7 +174,7 @@ function CoreObject({
         <meshBasicMaterial color="#dcd5ff" toneMapped={false} />
       </mesh>
       <mesh scale={1.02}>
-        <sphereGeometry args={[1.18, 56, 56]} />
+        <sphereGeometry args={[1.18, quality === "low" ? 36 : 56, quality === "low" ? 36 : 56]} />
         <shaderMaterial
           ref={shell}
           vertexShader={vertexShader}
@@ -191,6 +209,7 @@ export function SystemCore({ route, transitioning }: { route: string; transition
   const [supported, setSupported] = useState<boolean | null>(null);
   const [reduced, setReduced] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [quality, setQuality] = useState<"high" | "low">("high");
   const pointer = useRef<[number, number]>([0, 0]);
 
   useEffect(() => {
@@ -203,6 +222,19 @@ export function SystemCore({ route, transitioning }: { route: string; transition
       }
     });
     return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const compact = window.matchMedia("(max-width: 720px)");
+    const device = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+    const updateQuality = () => {
+      const constrained = compact.matches || navigator.hardwareConcurrency <= 4 ||
+        (device.deviceMemory !== undefined && device.deviceMemory <= 4) || Boolean(device.connection?.saveData);
+      setQuality(constrained ? "low" : "high");
+    };
+    updateQuality();
+    compact.addEventListener("change", updateQuality);
+    return () => compact.removeEventListener("change", updateQuality);
   }, []);
 
   useEffect(() => {
@@ -228,16 +260,35 @@ export function SystemCore({ route, transitioning }: { route: string; transition
   }, [reduced]);
 
   return (
-    <div className="system-core-visual" aria-hidden="true">
+    <div
+      className="system-core-visual"
+      data-quality={quality}
+      data-renderer={supported ? "webgl" : "css"}
+      aria-hidden="true"
+    >
       {supported ? (
-        <Canvas
-          dpr={[1, 1.35]}
-          camera={{ position: [0, 0, 4.35], fov: 44 }}
-          frameloop={visible && !reduced ? "always" : "demand"}
-          gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-        >
-          <CoreObject route={route} transitioning={transitioning} reduced={reduced} pointer={pointer} />
-        </Canvas>
+        <CoreErrorBoundary onError={() => setSupported(false)}>
+          <Canvas
+            dpr={quality === "low" ? [1, 1.1] : [1, 1.35]}
+            camera={{ position: [0, 0, 4.35], fov: 44 }}
+            frameloop={visible && !reduced ? "always" : "demand"}
+            gl={{ alpha: true, antialias: quality === "high", powerPreference: "high-performance" }}
+            onCreated={({ gl }) => {
+              gl.domElement.addEventListener("webglcontextlost", (event) => {
+                event.preventDefault();
+                setSupported(false);
+              }, { once: true });
+            }}
+          >
+            <CoreObject
+              route={route}
+              transitioning={transitioning}
+              reduced={reduced}
+              pointer={pointer}
+              quality={quality}
+            />
+          </Canvas>
+        </CoreErrorBoundary>
       ) : (
         <StaticSystemCore />
       )}

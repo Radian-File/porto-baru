@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "@/components/icons";
 import { InternalPage } from "@/components/internal-page";
-import { TransitionLink } from "@/components/portfolio-shell";
+import { TransitionLink } from "@/components/transition-link";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {

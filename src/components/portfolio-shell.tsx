@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useRef, useState, type AnchorHTMLAttributes, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import gsap from "gsap";
 import { SystemCore } from "@/components/system-core";
+import { TransitionLink, TransitionProvider } from "@/components/transition-link";
 
 const navigation = [
   { href: "/about", label: "About" },
@@ -12,29 +12,6 @@ const navigation = [
   { href: "/stack", label: "Stack" },
   { href: "/contact", label: "Contact" },
 ];
-
-const TransitionContext = createContext<((href: string) => void) | null>(null);
-
-type TransitionLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
-  href: string;
-};
-
-export function TransitionLink({ href, onClick, children, ...props }: TransitionLinkProps) {
-  const navigate = useContext(TransitionContext);
-
-  function handleClick(event: MouseEvent<HTMLAnchorElement>) {
-    onClick?.(event);
-    if (
-      event.defaultPrevented || !navigate || event.button !== 0 || event.metaKey ||
-      event.ctrlKey || event.shiftKey || event.altKey || props.target === "_blank"
-    ) return;
-
-    event.preventDefault();
-    navigate(href);
-  }
-
-  return <Link href={href} onClick={handleClick} {...props}>{children}</Link>;
-}
 
 function InternalNavigation({ pathname }: { pathname: string }) {
   return (
@@ -118,6 +95,11 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
             pendingPath.current = null;
             setTransitioning(false);
             delete document.documentElement.dataset.transitionKind;
+            const main = stage.current?.querySelector<HTMLElement>("main");
+            if (main) {
+              main.tabIndex = -1;
+              main.focus({ preventScroll: true });
+            }
           },
         },
       );
@@ -130,11 +112,12 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <TransitionContext.Provider value={navigate}>
+    <TransitionProvider navigate={navigate}>
       <div
         className={`portfolio-shell ${isLanding ? "is-landing" : "is-internal"}`}
         data-route={routeName}
         data-transitioning={transitioning}
+        aria-busy={transitioning}
       >
         <a className="skip-link" href="#main-content">Skip to content</a>
         <div className="ambient-field" aria-hidden="true" />
@@ -142,6 +125,6 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
         {!isLanding && <InternalNavigation pathname={pathname} />}
         <div className="route-stage" ref={stage}>{children}</div>
       </div>
-    </TransitionContext.Provider>
+    </TransitionProvider>
   );
 }

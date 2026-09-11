@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, GithubMark } from "@/components/icons";
-import { TransitionLink } from "@/components/portfolio-shell";
+import { TransitionLink } from "@/components/transition-link";
 import { getProject, projects } from "@/data/projects";
 
 type ProjectPageProps = { params: Promise<{ slug: string }> };

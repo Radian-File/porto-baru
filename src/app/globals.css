@@ -90,6 +90,10 @@ a {
   will-change: opacity, transform, filter, clip-path;
 }
 
+main[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .portfolio-shell[data-transitioning="true"] .route-stage {
   pointer-events: none;
 }
