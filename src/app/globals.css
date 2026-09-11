@@ -593,7 +593,7 @@ main[tabindex="-1"]:focus {
 
 .about-statement h2,
 .about-principles > h2,
-.about-contact h2 {
+.contact-hub h2 {
   margin: 0;
   color: var(--muted);
   font-size: 0.8rem;
@@ -666,7 +666,8 @@ main[tabindex="-1"]:focus {
   margin-top: clamp(5rem, 12vh, 10rem);
 }
 
-.about-kicker {
+.about-kicker,
+.contact-kicker {
   margin: 0;
   color: var(--quiet);
   font-size: 0.8rem;
@@ -823,7 +824,7 @@ main[tabindex="-1"]:focus {
   height: 0.9rem;
 }
 
-.about-contact {
+.contact-hub {
   display: grid;
   max-width: 73rem;
   grid-template-columns: minmax(10rem, 0.75fr) minmax(0, 1.45fr);
@@ -833,7 +834,7 @@ main[tabindex="-1"]:focus {
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.about-contact-intro h2 {
+.contact-hub-intro h2 {
   color: var(--ink);
   font-family: var(--font-display), sans-serif;
   font-size: clamp(2rem, 3.4vw, 3.7rem);
@@ -842,18 +843,18 @@ main[tabindex="-1"]:focus {
   line-height: 0.95;
 }
 
-.about-contact-intro > p:last-child {
+.contact-hub-intro > p:last-child {
   max-width: 25ch;
   margin: 1.2rem 0 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.about-contact-links {
+.contact-hub-links {
   border-top: 1px solid var(--line-soft);
 }
 
-.about-contact-links a {
+.contact-hub-links a {
   display: grid;
   min-height: 6.4rem;
   grid-template-columns: 2.5rem minmax(0, 1fr) auto;
@@ -864,26 +865,26 @@ main[tabindex="-1"]:focus {
   transition: background-color 180ms ease, padding 220ms ease;
 }
 
-.about-contact-links a:hover,
-.about-contact-links a:focus-visible {
+.contact-hub-links a:hover,
+.contact-hub-links a:focus-visible {
   padding-inline: 0.8rem;
   background: rgba(154, 140, 255, 0.06);
 }
 
-.about-contact-links > a > svg:first-child,
-.about-rrs > div:first-child > svg {
+.contact-hub-links > a > svg:first-child,
+.contact-rrs > div:first-child > svg {
   width: 1.25rem;
   height: 1.25rem;
   color: var(--pulse-bright);
 }
 
-.about-contact-links span {
+.contact-hub-links span {
   display: flex;
   flex-direction: column;
   gap: 0.22rem;
 }
 
-.about-contact-links strong {
+.contact-hub-links strong {
   font-family: var(--font-display), sans-serif;
   font-size: clamp(1.1rem, 1.7vw, 1.45rem);
   font-weight: 540;
@@ -891,25 +892,25 @@ main[tabindex="-1"]:focus {
   line-height: 1;
 }
 
-.about-contact-links small {
+.contact-hub-links small {
   color: var(--muted);
   font-size: 0.76rem;
 }
 
-.about-contact-links > a > svg:last-child,
-.about-rrs a svg {
+.contact-hub-links > a > svg:last-child,
+.contact-rrs a svg {
   width: 1rem;
   height: 1rem;
   color: var(--muted);
   transition: transform 200ms ease;
 }
 
-.about-contact-links a:hover > svg:last-child,
-.about-rrs a:hover svg {
+.contact-hub-links a:hover > svg:last-child,
+.contact-rrs a:hover svg {
   transform: translate(3px, -3px);
 }
 
-.about-rrs {
+.contact-rrs {
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr);
   gap: 1rem;
@@ -922,18 +923,18 @@ main[tabindex="-1"]:focus {
   background-size: 2rem 2rem, 2rem 2rem, auto;
 }
 
-.about-rrs > div:first-child {
+.contact-rrs > div:first-child {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
 }
 
-.about-rrs h3,
-.about-rrs p {
+.contact-rrs h3,
+.contact-rrs p {
   margin: 0;
 }
 
-.about-rrs h3 {
+.contact-rrs h3 {
   font-family: var(--font-display), sans-serif;
   font-size: clamp(1.65rem, 2.7vw, 2.6rem);
   font-weight: 540;
@@ -941,14 +942,14 @@ main[tabindex="-1"]:focus {
   line-height: 0.95;
 }
 
-.about-rrs h3 + p {
+.contact-rrs h3 + p {
   max-width: 41ch;
   margin-top: 0.75rem;
   color: var(--muted);
   font-size: 0.84rem;
 }
 
-.about-rrs a {
+.contact-rrs a {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -1807,14 +1808,14 @@ main[tabindex="-1"]:focus {
   .about-statement,
   .about-principles,
   .about-now,
-  .about-contact {
+  .contact-hub {
     grid-template-columns: 1fr;
   }
 
   .about-statement,
   .about-principles,
   .about-now,
-  .about-contact {
+  .contact-hub {
     gap: 1.25rem;
   }
 
@@ -1827,26 +1828,26 @@ main[tabindex="-1"]:focus {
     gap: 0.8rem;
   }
 
-  .about-contact {
+  .contact-hub {
     margin-bottom: 2rem;
   }
 
-  .about-contact-intro > p:last-child {
+  .contact-hub-intro > p:last-child {
     max-width: 32ch;
   }
 
-  .about-contact-links a {
+  .contact-hub-links a {
     min-height: 5.8rem;
     grid-template-columns: 2rem minmax(0, 1fr) auto;
     gap: 0.85rem;
   }
 
-  .about-contact-links a:hover,
-  .about-contact-links a:focus-visible {
+  .contact-hub-links a:hover,
+  .contact-hub-links a:focus-visible {
     padding-inline: 0.45rem;
   }
 
-  .about-rrs {
+  .contact-rrs {
     grid-template-columns: 2rem minmax(0, 1fr);
     gap: 0.85rem;
   }

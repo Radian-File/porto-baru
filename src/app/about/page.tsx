@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { LuMail, LuMessageCircle, LuStore } from "react-icons/lu";
 import { ContributionHeatmap } from "@/components/contribution-heatmap";
-import { ArrowUpRight } from "@/components/icons";
 import { InternalPage } from "@/components/internal-page";
 import { getContributionCalendar } from "@/data/github";
 
@@ -71,56 +69,6 @@ export default async function AboutPage() {
         />
       )}
 
-      <section className="about-contact" aria-labelledby="about-contact-title">
-        <div className="about-contact-intro">
-          <p className="about-kicker">Work with me</p>
-          <h2 id="about-contact-title">Have a project or role in mind?</h2>
-          <p>
-            For full-stack roles, product collaborations, or well-scoped digital projects,
-            reach out directly.
-          </p>
-        </div>
-        <div>
-          <div className="about-contact-links">
-            <a href="mailto:radianp02@gmail.com">
-              <LuMail aria-hidden="true" />
-              <span>
-                <strong>Email Ricky</strong>
-                <small>radianp02@gmail.com</small>
-              </span>
-              <ArrowUpRight />
-            </a>
-            <a
-              href="https://wa.me/6281295248513"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <LuMessageCircle aria-hidden="true" />
-              <span>
-                <strong>Chat on WhatsApp</strong>
-                <small>Start with a quick conversation</small>
-              </span>
-              <ArrowUpRight />
-            </a>
-          </div>
-          <aside className="about-rrs" aria-labelledby="about-rrs-title">
-            <div>
-              <LuStore aria-hidden="true" />
-              <p className="about-kicker">Also building</p>
-            </div>
-            <div>
-              <h3 id="about-rrs-title">RRS Studio.</h3>
-              <p>
-                An independent digital studio for websites, applications, dashboards, and
-                custom workflows—with scope agreed before delivery begins.
-              </p>
-              <a href="https://rrs-studio.store" target="_blank" rel="noreferrer">
-                Visit RRS Studio <ArrowUpRight />
-              </a>
-            </div>
-          </aside>
-        </div>
-      </section>
     </InternalPage>
   );
 }
