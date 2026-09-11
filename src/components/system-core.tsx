@@ -8,6 +8,7 @@ const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uEnergy;
   uniform float uMode;
+  uniform float uShellOpacity;
   uniform vec2 uPointer;
 
   varying vec3 vNormal;
@@ -20,7 +21,7 @@ const vertexShader = /* glsl */ `
     float waveB = sin(position.x * 7.0 - slowTime + position.z * 3.0);
     float waveC = cos((position.x + position.y) * 4.2 + slowTime * 0.7 + uPointer.y);
     float wave = (waveA + waveB * 0.55 + waveC * 0.35) / 2.0;
-    float displacement = wave * (0.035 + uMode * 0.008) * uEnergy;
+    float displacement = wave * (0.024 + uMode * 0.024) * uEnergy;
     vec3 transformed = position + normal * displacement;
 
     vec4 world = modelMatrix * vec4(transformed, 1.0);
@@ -35,6 +36,7 @@ const fragmentShader = /* glsl */ `
   uniform float uTime;
   uniform float uEnergy;
   uniform float uMode;
+  uniform float uShellOpacity;
 
   varying vec3 vNormal;
   varying vec3 vWorldPosition;
@@ -47,20 +49,37 @@ const fragmentShader = /* glsl */ `
     vec3 shadow = vec3(0.018, 0.014, 0.042);
     vec3 violet = vec3(0.31, 0.23, 0.78);
     vec3 pearl = vec3(0.79, 0.75, 1.0);
-    vec3 color = mix(shadow, violet, fresnel * 0.82 + contour * 0.055);
-    color = mix(color, pearl, pow(fresnel, 5.0) * (0.44 + uMode * 0.04));
+    vec3 color = mix(shadow, violet, fresnel * 0.82 + contour * (0.045 + uMode * 0.035));
+    color = mix(color, pearl, pow(fresnel, 5.0) * (0.4 + uMode * 0.055));
     color *= 0.82 + uEnergy * 0.24;
-    float alpha = 0.72 + fresnel * 0.25;
+    float alpha = (0.72 + fresnel * 0.25) * uShellOpacity;
     gl_FragColor = vec4(color, alpha);
   }
 `;
 
 const routeModes: Record<string, number> = {
-  home: 0,
-  about: 0.7,
-  portfolio: 2,
-  stack: 3,
-  contact: 1.25,
+  home: 0.25,
+  about: 0,
+  portfolio: 2.4,
+  stack: 3.2,
+  contact: 1.1,
+};
+
+const routeVisuals: Record<string, {
+  coreScale: number;
+  shellOpacity: number;
+  particleOpacity: number;
+  particleScale: number;
+  particleSize: number;
+  ringOpacity: number;
+  networkOpacity: number;
+  wireOpacity: number;
+}> = {
+  home: { coreScale: 1, shellOpacity: 0.88, particleOpacity: 0.1, particleScale: 1, particleSize: 0.012, ringOpacity: 0.14, networkOpacity: 0.01, wireOpacity: 0.035 },
+  about: { coreScale: 0.72, shellOpacity: 0.36, particleOpacity: 0.025, particleScale: 0.88, particleSize: 0.009, ringOpacity: 0.045, networkOpacity: 0, wireOpacity: 0.015 },
+  portfolio: { coreScale: 0.48, shellOpacity: 0.56, particleOpacity: 0.95, particleScale: 1.22, particleSize: 0.02, ringOpacity: 0.2, networkOpacity: 0.2, wireOpacity: 0.15 },
+  stack: { coreScale: 0.62, shellOpacity: 0.48, particleOpacity: 0.12, particleScale: 1.04, particleSize: 0.011, ringOpacity: 0.82, networkOpacity: 0.055, wireOpacity: 0.25 },
+  contact: { coreScale: 1.06, shellOpacity: 0.72, particleOpacity: 0.16, particleScale: 1.06, particleSize: 0.014, ringOpacity: 0.3, networkOpacity: 0.025, wireOpacity: 0.06 },
 };
 
 class CoreErrorBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
@@ -107,14 +126,21 @@ function CoreObject({
 }) {
   const group = useRef<THREE.Group>(null);
   const shell = useRef<THREE.ShaderMaterial>(null);
+  const innerCore = useRef<THREE.Mesh>(null);
+  const innerMaterial = useRef<THREE.MeshBasicMaterial>(null);
+  const particleField = useRef<THREE.Points>(null);
   const particles = useRef<THREE.PointsMaterial>(null);
+  const network = useRef<THREE.LineBasicMaterial>(null);
+  const wire = useRef<THREE.MeshBasicMaterial>(null);
   const rings = useRef<Array<THREE.Mesh | null>>([]);
   const mode = routeModes[route] ?? 1;
+  const visual = routeVisuals[route] ?? routeVisuals.home;
 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uEnergy: { value: 1 },
     uMode: { value: 0 },
+    uShellOpacity: { value: routeVisuals.home.shellOpacity },
     uPointer: { value: new THREE.Vector2() },
   }), []);
 
@@ -136,27 +162,50 @@ function CoreObject({
     return positions;
   }, [quality]);
 
+  const networkPositions = useMemo(() => {
+    const segmentCount = quality === "low" ? 44 : 82;
+    const positions = new Float32Array(segmentCount * 6);
+    const pointCount = particlePositions.length / 3;
+
+    for (let index = 0; index < segmentCount; index += 1) {
+      const from = (index * 29) % pointCount;
+      const to = (from + 17 + (index % 7) * 11) % pointCount;
+      positions.set(particlePositions.subarray(from * 3, from * 3 + 3), index * 6);
+      positions.set(particlePositions.subarray(to * 3, to * 3 + 3), index * 6 + 3);
+    }
+
+    return positions;
+  }, [particlePositions, quality]);
+
   useFrame((state, delta) => {
-    if (!group.current || !shell.current || !particles.current) return;
+    if (
+      !group.current || !shell.current || !innerCore.current || !innerMaterial.current ||
+      !particleField.current || !particles.current || !network.current || !wire.current
+    ) return;
 
     const time = reduced ? 1.4 : state.clock.elapsedTime;
     const targetEnergy = transitioning ? 1.85 : route === "contact" ? 1.22 : 1;
-    const targetParticleOpacity = route === "portfolio" ? 0.72 : route === "about" ? 0.22 : 0.1;
-    const targetRingOpacity = route === "stack" ? 0.62 : route === "contact" ? 0.3 : 0.14;
     const targetScale = transitioning ? 1.13 : route === "stack" ? 0.92 : 1;
 
     shell.current.uniforms.uTime.value = time;
     shell.current.uniforms.uEnergy.value = THREE.MathUtils.damp(shell.current.uniforms.uEnergy.value, targetEnergy, 4.5, delta);
     shell.current.uniforms.uMode.value = THREE.MathUtils.damp(shell.current.uniforms.uMode.value, mode, 3.5, delta);
+    shell.current.uniforms.uShellOpacity.value = THREE.MathUtils.damp(shell.current.uniforms.uShellOpacity.value, visual.shellOpacity, 4, delta);
     shell.current.uniforms.uPointer.value.x = THREE.MathUtils.damp(shell.current.uniforms.uPointer.value.x, pointer.current[0], 3, delta);
     shell.current.uniforms.uPointer.value.y = THREE.MathUtils.damp(shell.current.uniforms.uPointer.value.y, pointer.current[1], 3, delta);
-    particles.current.opacity = THREE.MathUtils.damp(particles.current.opacity, targetParticleOpacity, 4, delta);
+    innerCore.current.scale.setScalar(THREE.MathUtils.damp(innerCore.current.scale.x, visual.coreScale, 4, delta));
+    innerMaterial.current.opacity = THREE.MathUtils.damp(innerMaterial.current.opacity, route === "about" ? 0.52 : 0.92, 4, delta);
+    particleField.current.scale.setScalar(THREE.MathUtils.damp(particleField.current.scale.x, visual.particleScale, 4, delta));
+    particles.current.opacity = THREE.MathUtils.damp(particles.current.opacity, visual.particleOpacity, 4, delta);
+    particles.current.size = THREE.MathUtils.damp(particles.current.size, visual.particleSize, 4, delta);
+    network.current.opacity = THREE.MathUtils.damp(network.current.opacity, visual.networkOpacity, 4, delta);
+    wire.current.opacity = THREE.MathUtils.damp(wire.current.opacity, visual.wireOpacity, 4, delta);
     group.current.scale.setScalar(THREE.MathUtils.damp(group.current.scale.x, targetScale, 4.5, delta));
 
     rings.current.forEach((ring, index) => {
       if (!ring) return;
       const material = ring.material as THREE.MeshBasicMaterial;
-      material.opacity = THREE.MathUtils.damp(material.opacity, targetRingOpacity, 4, delta);
+      material.opacity = THREE.MathUtils.damp(material.opacity, visual.ringOpacity, 4, delta);
       if (!reduced) ring.rotation.z += delta * (index === 0 ? 0.055 : -0.035);
     });
 
@@ -169,9 +218,9 @@ function CoreObject({
 
   return (
     <group ref={group} rotation={[0.04, -0.2, 0]}>
-      <mesh>
+      <mesh ref={innerCore}>
         <sphereGeometry args={[0.69, 64, 64]} />
-        <meshBasicMaterial color="#dcd5ff" toneMapped={false} />
+        <meshBasicMaterial ref={innerMaterial} color="#dcd5ff" toneMapped={false} transparent opacity={0.92} />
       </mesh>
       <mesh scale={1.02}>
         <sphereGeometry args={[1.18, quality === "low" ? 36 : 56, quality === "low" ? 36 : 56]} />
@@ -181,14 +230,21 @@ function CoreObject({
           fragmentShader={fragmentShader}
           uniforms={uniforms}
           transparent
+          depthWrite={false}
         />
       </mesh>
-      <points rotation={[0.14, 0.2, -0.08]}>
+      <points ref={particleField} rotation={[0.14, 0.2, -0.08]}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[particlePositions, 3]} />
         </bufferGeometry>
         <pointsMaterial ref={particles} color="#c8beff" size={0.012} sizeAttenuation transparent opacity={0.1} depthWrite={false} />
       </points>
+      <lineSegments rotation={[0.14, 0.2, -0.08]}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[networkPositions, 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial ref={network} color="#b9adff" transparent opacity={0.01} depthWrite={false} />
+      </lineSegments>
       <mesh ref={(node) => { rings.current[0] = node; }} rotation={[1.22, 0.18, -0.25]}>
         <torusGeometry args={[1.48, 0.0035, 6, 128]} />
         <meshBasicMaterial color="#9e8cff" transparent opacity={0.14} depthWrite={false} />
@@ -199,7 +255,7 @@ function CoreObject({
       </mesh>
       <mesh scale={1.012}>
         <icosahedronGeometry args={[1.19, 3]} />
-        <meshBasicMaterial color="#7565d5" wireframe transparent opacity={0.035} depthWrite={false} />
+        <meshBasicMaterial ref={wire} color="#7565d5" wireframe transparent opacity={0.035} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -262,6 +318,7 @@ export function SystemCore({ route, transitioning }: { route: string; transition
   return (
     <div
       className="system-core-visual"
+      data-state={route}
       data-quality={quality}
       data-renderer={supported ? "webgl" : "css"}
       aria-hidden="true"

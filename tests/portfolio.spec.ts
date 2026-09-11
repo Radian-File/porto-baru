@@ -11,6 +11,22 @@ test("portfolio index exposes selected work and the persistent navigation", asyn
   await expect(page.getByRole("heading", { level: 1, name: /Selected systems/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /RRS Studio/ })).toHaveAttribute("href", "/work/rrs-web");
   await expect(page.getByRole("link", { name: "Portfolio", exact: true })).toHaveAttribute("aria-current", "page");
+  await expect(page.locator(".system-core-visual")).toHaveAttribute("data-state", "portfolio");
+});
+
+test("About and Portfolio expose distinct Core compositions", async ({ page }) => {
+  await page.goto("/about");
+  const core = page.locator(".system-core-visual");
+  await expect(core).toHaveAttribute("data-state", "about");
+  const aboutLightSize = await core.evaluate((element) => getComputedStyle(element).getPropertyValue("--core-light-size").trim());
+
+  await page.getByRole("link", { name: "Portfolio", exact: true }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
+  await expect(core).toHaveAttribute("data-state", "portfolio");
+  const portfolioLightSize = await core.evaluate((element) => getComputedStyle(element).getPropertyValue("--core-light-size").trim());
+
+  expect(aboutLightSize).toBe("17%");
+  expect(portfolioLightSize).toBe("11%");
 });
 
 test("the same System Core persists through a portal transition", async ({ page }) => {
