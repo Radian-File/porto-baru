@@ -147,19 +147,23 @@ main[tabindex="-1"]:focus {
 .system-core-visual::after {
   position: absolute;
   z-index: 2;
-  top: 50%;
-  left: 50%;
-  width: var(--core-light-size, 31%);
+  top: 44%;
+  left: 43%;
+  width: var(--core-light-size, 18%);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 42% 40%, #fff 0 5%, #eeeaff 17%, rgba(190, 176, 255, 0.92) 31%, rgba(127, 101, 255, 0.2) 58%, transparent 72%);
-  box-shadow: 0 0 2.8rem rgba(224, 217, 255, 0.54), 0 0 8rem rgba(111, 83, 255, 0.34);
+  background: radial-gradient(circle, #faf8ff 0 4%, #c7beff 11%, rgba(117, 101, 213, 0.62) 29%, rgba(53, 39, 111, 0.18) 55%, transparent 72%);
+  box-shadow: 0 0 2.4rem rgba(199, 190, 255, 0.42), 0 0 7rem rgba(117, 101, 213, 0.26);
   content: "";
   filter: blur(0.6px);
   mix-blend-mode: screen;
-  opacity: var(--core-light-opacity, 1);
+  opacity: 0;
   transform: translate(-50%, -50%);
   transition: filter 280ms ease, opacity 420ms ease, transform 480ms cubic-bezier(0.22, 1, 0.36, 1), width 620ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.system-core-visual[data-renderer="css"]::after {
+  opacity: var(--core-light-opacity, 1);
 }
 
 .system-core-visual canvas {
@@ -234,12 +238,12 @@ main[tabindex="-1"]:focus {
 }
 
 .core-light {
-  top: 26%;
-  left: 27%;
-  width: 26%;
+  top: 29%;
+  left: 30%;
+  width: 18%;
   aspect-ratio: 1;
-  background: radial-gradient(circle at 45% 43%, #fff 0 4%, #ded9ff 13%, rgba(169, 151, 255, 0.74) 28%, rgba(127, 104, 255, 0.15) 55%, transparent 72%);
-  box-shadow: 0 0 3rem rgba(211, 202, 255, 0.62), 0 0 7rem rgba(125, 100, 255, 0.38);
+  background: radial-gradient(circle, #faf8ff 0 4%, #c7beff 11%, rgba(117, 101, 213, 0.62) 29%, rgba(53, 39, 111, 0.18) 55%, transparent 72%);
+  box-shadow: 0 0 2.4rem rgba(199, 190, 255, 0.42), 0 0 7rem rgba(117, 101, 213, 0.26);
   filter: blur(1px);
 }
 
@@ -290,7 +294,7 @@ main[tabindex="-1"]:focus {
 .is-internal[data-route="about"] .system-core-visual {
   --core-atmosphere-opacity: 0.34;
   --core-light-opacity: 0.48;
-  --core-light-size: 17%;
+  --core-light-size: 10%;
   left: 92%;
   opacity: 0.4;
 }
@@ -298,7 +302,7 @@ main[tabindex="-1"]:focus {
 .is-internal[data-route="portfolio"] .system-core-visual {
   --core-atmosphere-opacity: 0.72;
   --core-light-opacity: 0.76;
-  --core-light-size: 11%;
+  --core-light-size: 8%;
   left: 91%;
   width: min(86vw, 76rem);
   opacity: 0.52;
@@ -307,7 +311,7 @@ main[tabindex="-1"]:focus {
 .is-internal[data-route="stack"] .system-core-visual {
   --core-atmosphere-opacity: 0.46;
   --core-light-opacity: 0.52;
-  --core-light-size: 16%;
+  --core-light-size: 12%;
   left: 82%;
   width: min(67vw, 61rem);
   opacity: 0.47;
@@ -316,7 +320,7 @@ main[tabindex="-1"]:focus {
 .is-internal[data-route="contact"] .system-core-visual {
   --core-atmosphere-opacity: 1;
   --core-light-opacity: 1;
-  --core-light-size: 35%;
+  --core-light-size: 16%;
   top: 55%;
   left: 83%;
   width: min(62vw, 57rem);
