@@ -13,6 +13,18 @@ test("portfolio index exposes selected work and the persistent navigation", asyn
   await expect(page.getByRole("link", { name: "Portfolio", exact: true })).toHaveAttribute("aria-current", "page");
 });
 
+test("the same System Core persists through a portal transition", async ({ page }) => {
+  await page.goto("/");
+  const canvas = page.locator(".system-core-visual canvas");
+  await expect(canvas).toBeVisible();
+  await canvas.evaluate((element) => { element.dataset.persistenceToken = "same-core"; });
+
+  await page.getByRole("link", { name: /Explore selected work/ }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
+  await expect(page.locator(".portfolio-shell")).toHaveAttribute("data-route", "portfolio");
+  await expect(page.locator(".system-core-visual canvas")).toHaveAttribute("data-persistence-token", "same-core");
+});
+
 test("project route presents evidence and source", async ({ page }) => {
   await page.goto("/work/rrs-web");
   await expect(page.getByRole("heading", { level: 1, name: "RRS Studio" })).toBeVisible();
@@ -33,6 +45,8 @@ test("reduced motion preserves readable content", async ({ browser }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator("html")).toHaveCSS("scroll-behavior", "auto");
+  await page.getByRole("link", { name: /Explore selected work/ }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
   await context.close();
 });
 

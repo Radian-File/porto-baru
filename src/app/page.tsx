@@ -1,17 +1,17 @@
-import Link from "next/link";
 import { ArrowUpRight } from "@/components/icons";
+import { TransitionLink } from "@/components/portfolio-shell";
 
 export default function Home() {
   return (
     <main className="landing" id="main-content">
       <header className="landing-header">
-        <Link className="wordmark" href="/" aria-label="Ricky, home">
+        <TransitionLink className="wordmark" href="/" aria-label="Ricky, home">
           Ricky<span>.</span>
-        </Link>
+        </TransitionLink>
         <nav className="landing-nav" aria-label="Primary navigation">
-          <Link href="/about">About</Link>
-          <Link href="/portfolio">Portfolio</Link>
-          <Link href="/contact">Contact</Link>
+          <TransitionLink href="/about">About</TransitionLink>
+          <TransitionLink href="/portfolio">Portfolio</TransitionLink>
+          <TransitionLink href="/contact">Contact</TransitionLink>
         </nav>
       </header>
 
@@ -26,9 +26,9 @@ export default function Home() {
             I build complete web products—from interface and application logic to the systems
             that keep them dependable.
           </p>
-          <Link className="primary-link" href="/portfolio">
+          <TransitionLink className="primary-link" href="/portfolio">
             Explore selected work <ArrowUpRight />
-          </Link>
+          </TransitionLink>
         </div>
       </section>
 

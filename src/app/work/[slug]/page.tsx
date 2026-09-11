@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, GithubMark } from "@/components/icons";
+import { TransitionLink } from "@/components/portfolio-shell";
 import { getProject, projects } from "@/data/projects";
 
 type ProjectPageProps = { params: Promise<{ slug: string }> };
@@ -27,7 +27,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
       <main className="case-main" id="main-content">
         <header className="case-header">
-          <Link className="back-link" href="/portfolio">Back to portfolio</Link>
+          <TransitionLink className="back-link" href="/portfolio">Back to portfolio</TransitionLink>
           <span>{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span>
         </header>
         <section className="case-hero frame" aria-labelledby="project-title">
@@ -71,7 +71,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <nav className="next-project frame" aria-label="Project navigation">
           <span>Next project</span>
-          <Link href={`/work/${next.slug}`}>{next.name} <ArrowUpRight /></Link>
+          <TransitionLink href={`/work/${next.slug}`}>{next.name} <ArrowUpRight /></TransitionLink>
         </nav>
       </main>
   );
