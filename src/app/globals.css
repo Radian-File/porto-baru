@@ -824,13 +824,16 @@ main[tabindex="-1"]:focus {
 }
 
 .about-contact {
-  max-width: 65rem;
+  display: grid;
+  max-width: 73rem;
+  grid-template-columns: minmax(10rem, 0.75fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 7vw, 9rem);
   margin-top: clamp(5rem, 12vh, 10rem);
   border-top: 1px solid var(--line);
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.about-contact h2 {
+.about-contact-intro h2 {
   color: var(--ink);
   font-family: var(--font-display), sans-serif;
   font-size: clamp(2rem, 3.4vw, 3.7rem);
@@ -839,8 +842,121 @@ main[tabindex="-1"]:focus {
   line-height: 0.95;
 }
 
-.about-contact .primary-link {
-  margin-top: 1.75rem;
+.about-contact-intro > p:last-child {
+  max-width: 25ch;
+  margin: 1.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.about-contact-links {
+  border-top: 1px solid var(--line-soft);
+}
+
+.about-contact-links a {
+  display: grid;
+  min-height: 6.4rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink);
+  transition: background-color 180ms ease, padding 220ms ease;
+}
+
+.about-contact-links a:hover,
+.about-contact-links a:focus-visible {
+  padding-inline: 0.8rem;
+  background: rgba(154, 140, 255, 0.06);
+}
+
+.about-contact-links > a > svg:first-child,
+.about-rrs > div:first-child > svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--pulse-bright);
+}
+
+.about-contact-links span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.about-contact-links strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  font-weight: 540;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.about-contact-links small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.about-contact-links > a > svg:last-child,
+.about-rrs a svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--muted);
+  transition: transform 200ms ease;
+}
+
+.about-contact-links a:hover > svg:last-child,
+.about-rrs a:hover svg {
+  transform: translate(3px, -3px);
+}
+
+.about-rrs {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1.1rem;
+  padding: clamp(1.15rem, 2.5vw, 1.75rem);
+  background:
+    linear-gradient(rgba(184, 171, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 171, 255, 0.06) 1px, transparent 1px),
+    rgba(14, 12, 30, 0.42);
+  background-size: 2rem 2rem, 2rem 2rem, auto;
+}
+
+.about-rrs > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.about-rrs h3,
+.about-rrs p {
+  margin: 0;
+}
+
+.about-rrs h3 {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.65rem, 2.7vw, 2.6rem);
+  font-weight: 540;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.about-rrs h3 + p {
+  max-width: 41ch;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.about-rrs a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  color: var(--pulse-bright);
+  font-size: 0.8rem;
+  font-weight: 650;
 }
 
 .portfolio-page::before {
@@ -1080,46 +1196,145 @@ main[tabindex="-1"]:focus {
   color: var(--muted);
 }
 
+.stack-page::before {
+  inset: 0 23% 0 0;
+  background: linear-gradient(90deg, rgba(2, 2, 7, 0.99) 0%, rgba(2, 2, 7, 0.9) 69%, transparent 100%);
+}
+
+.stack-intro {
+  display: flex;
+  max-width: 73rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.stack-intro > p {
+  margin: 0;
+  color: var(--quiet);
+  font-size: 0.76rem;
+}
+
+.stack-level-key,
+.stack-level {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.stack-level-key {
+  gap: 1.25rem;
+}
+
+.stack-level {
+  color: var(--muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.stack-level-meter {
+  display: inline-flex;
+  align-items: end;
+  gap: 3px;
+}
+
+.stack-level-meter i {
+  display: block;
+  width: 0.36rem;
+  height: 0.65rem;
+  border: 1px solid rgba(204, 197, 255, 0.32);
+  background: transparent;
+}
+
+.stack-level-meter i:nth-child(2) {
+  height: 0.86rem;
+}
+
+.stack-level-meter i:nth-child(3) {
+  height: 1.08rem;
+}
+
+.stack-level-meter i[data-active="true"] {
+  border-color: var(--pulse);
+  background: var(--pulse);
+  box-shadow: 0 0 8px rgba(154, 140, 255, 0.42);
+}
+
 .stack-groups {
-  display: grid;
-  max-width: 66rem;
-  grid-template-columns: repeat(3, 1fr);
+  max-width: 73rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
   border-top: 1px solid var(--line);
 }
 
 .stack-groups section {
-  min-height: 18rem;
-  padding: 1.4rem clamp(1rem, 2vw, 2rem);
-  border-right: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.63fr) minmax(0, 1.37fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(2.3rem, 5vw, 4.5rem);
 }
 
-.stack-groups section:first-child {
-  padding-left: 0;
+.stack-group-heading h2 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.8rem, 3vw, 3.1rem);
+  font-weight: 540;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
 }
 
-.stack-groups section:last-child {
-  border-right: 0;
-}
-
-.stack-groups h2 {
-  margin: 0 0 3rem;
+.stack-group-heading p {
+  max-width: 22ch;
+  margin: 1rem 0 0;
   color: var(--muted);
-  font-family: var(--font-body), sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.86rem;
 }
 
-.stack-groups ul {
+.stack-tool-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.stack-groups li {
-  padding-block: 0.42rem;
+.stack-tool-list > li {
+  display: grid;
+  min-height: 6.6rem;
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  border-top: 1px solid var(--line-soft);
+  padding-block: 1rem;
+}
+
+.stack-tool-list > li:last-child {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.stack-tool-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  color: var(--pulse-bright);
+}
+
+.stack-tool-copy h3,
+.stack-tool-copy p {
+  margin: 0;
+}
+
+.stack-tool-copy h3 {
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(1.25rem, 2vw, 1.9rem);
-  letter-spacing: -0.03em;
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  font-weight: 540;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.stack-tool-copy p {
+  margin-top: 0.42rem;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .contact-actions {
@@ -1592,13 +1807,14 @@ main[tabindex="-1"]:focus {
   .about-statement,
   .about-principles,
   .about-now,
-  .stack-groups {
+  .about-contact {
     grid-template-columns: 1fr;
   }
 
   .about-statement,
   .about-principles,
-  .about-now {
+  .about-now,
+  .about-contact {
     gap: 1.25rem;
   }
 
@@ -1613,6 +1829,26 @@ main[tabindex="-1"]:focus {
 
   .about-contact {
     margin-bottom: 2rem;
+  }
+
+  .about-contact-intro > p:last-child {
+    max-width: 32ch;
+  }
+
+  .about-contact-links a {
+    min-height: 5.8rem;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: 0.85rem;
+  }
+
+  .about-contact-links a:hover,
+  .about-contact-links a:focus-visible {
+    padding-inline: 0.45rem;
+  }
+
+  .about-rrs {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.85rem;
   }
 
   .about-activity-heading {
@@ -1671,16 +1907,35 @@ main[tabindex="-1"]:focus {
     font-size: 0.76rem;
   }
 
-  .stack-groups section,
-  .stack-groups section:first-child {
-    min-height: 0;
-    padding: 1.5rem 0 2.2rem;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
+  .stack-intro {
+    display: block;
   }
 
-  .stack-groups h2 {
-    margin-bottom: 1.2rem;
+  .stack-level-key {
+    flex-wrap: wrap;
+    gap: 0.55rem 1.1rem;
+    margin-top: 1.1rem;
+  }
+
+  .stack-groups section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-block: 2.5rem;
+  }
+
+  .stack-tool-list > li {
+    min-height: 0;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.85rem;
+    padding-block: 1.1rem;
+  }
+
+  .stack-tool-list .stack-level {
+    grid-column: 2;
+  }
+
+  .stack-tool-copy p {
+    max-width: 30ch;
   }
 
   .case-main {
