@@ -569,43 +569,147 @@ main[tabindex="-1"]:focus {
   margin-top: clamp(4rem, 9vh, 7.5rem);
 }
 
+.about-page .internal-heading {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.about-page .internal-intro {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+}
+
 .about-statement {
-  max-width: 58rem;
+  display: grid;
+  max-width: 65rem;
+  grid-template-columns: minmax(10rem, 0.75fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 7vw, 9rem);
   border-top: 1px solid var(--line);
-  padding-top: 1.75rem;
+  padding-top: 1.25rem;
+}
+
+.about-statement h2,
+.about-principles > h2,
+.about-contact h2 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.about-statement > div {
+  max-width: 37rem;
 }
 
 .about-statement p {
-  max-width: 31ch;
+  max-width: 27ch;
   margin: 0;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(1.75rem, 3vw, 3.25rem);
+  font-size: clamp(1.7rem, 2.8vw, 3.1rem);
   letter-spacing: -0.04em;
   line-height: 1.08;
 }
 
-.fact-list {
-  display: grid;
-  max-width: 58rem;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin: clamp(3.5rem, 8vh, 6rem) 0 0;
-}
-
-.fact-list div {
-  border-top: 1px solid var(--line-soft);
-  padding-top: 0.9rem;
-}
-
-.fact-list dt {
-  color: var(--quiet);
-  font-size: 0.72rem;
-}
-
-.fact-list dd {
-  margin: 0.45rem 0 0;
+.about-statement p + p {
+  margin-top: 1.35em;
   color: var(--muted);
-  font-size: 0.86rem;
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+.about-principles {
+  display: grid;
+  max-width: 65rem;
+  grid-template-columns: minmax(10rem, 0.75fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 7vw, 9rem);
+  margin-top: clamp(5rem, 12vh, 10rem);
+}
+
+.about-principle-list {
+  border-top: 1px solid var(--line);
+}
+
+.about-principle-list article {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding-block: 1.4rem 1.55rem;
+}
+
+.about-principle-list h3 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-weight: 540;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.about-principle-list p {
+  max-width: 29ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.about-now {
+  display: grid;
+  max-width: 65rem;
+  grid-template-columns: minmax(10rem, 0.75fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 7vw, 9rem);
+  margin-top: clamp(5rem, 12vh, 10rem);
+}
+
+.about-kicker {
+  margin: 0;
+  color: var(--quiet);
+  font-size: 0.8rem;
+}
+
+.about-now > div {
+  max-width: 34rem;
+}
+
+.about-now h2 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.25rem, 4vw, 4.75rem);
+  font-weight: 550;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+.about-now h2 + p {
+  max-width: 43ch;
+  margin: 1.7rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+}
+
+.about-contact {
+  max-width: 65rem;
+  margin-top: clamp(5rem, 12vh, 10rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.about-contact h2 {
+  color: var(--ink);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2rem, 3.4vw, 3.7rem);
+  font-weight: 540;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.about-contact .primary-link {
+  margin-top: 1.75rem;
 }
 
 .project-index-list {
@@ -1164,13 +1268,30 @@ main[tabindex="-1"]:focus {
     margin-top: 4rem;
   }
 
-  .fact-list,
+  .about-statement,
+  .about-principles,
+  .about-now,
   .stack-groups {
     grid-template-columns: 1fr;
   }
 
-  .fact-list {
-    gap: 1.4rem;
+  .about-statement,
+  .about-principles,
+  .about-now {
+    gap: 1.25rem;
+  }
+
+  .about-statement p {
+    max-width: 23ch;
+  }
+
+  .about-principle-list article {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .about-contact {
+    margin-bottom: 2rem;
   }
 
   .project-index-item {
