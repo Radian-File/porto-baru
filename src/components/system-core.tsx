@@ -97,18 +97,19 @@ const innerFragmentShader = /* glsl */ `
     float pulse = 0.96 + sin(uTime * 0.72) * 0.04;
 
     vec3 shadow = vec3(0.043, 0.031, 0.094);
-    vec3 body = vec3(0.208, 0.153, 0.435);
-    vec3 energy = vec3(0.459, 0.396, 0.835);
-    vec3 lavender = vec3(0.780, 0.745, 1.0);
+    vec3 body = vec3(0.247, 0.180, 0.510);
+    vec3 energy = vec3(0.545, 0.470, 0.965);
+    vec3 lavender = vec3(0.835, 0.800, 1.0);
     vec3 pearl = vec3(0.980, 0.973, 1.0);
 
     float bodyLight = smoothstep(0.05, 0.88, lightFacing);
     vec3 color = mix(shadow, body, bodyLight * 0.9);
-    color = mix(color, energy, (halo * 0.34 + rim * 0.2) * uEnergy);
+    color = mix(color, energy, (halo * 0.42 + rim * 0.24) * uEnergy);
     color += energy * textureWave * 0.025;
-    color = mix(color, lavender, halo * uLightStrength * 1.65);
-    color = mix(color, pearl, hotSpot * min(uLightStrength * 4.0, 0.72));
-    color *= pulse * (0.94 + uEnergy * 0.06);
+    color += energy * halo * (0.035 + uLightStrength * 0.16);
+    color = mix(color, lavender, halo * uLightStrength * 1.9);
+    color = mix(color, pearl, hotSpot * min(uLightStrength * 4.2, 0.76));
+    color *= pulse * (0.98 + uEnergy * 0.08);
 
     gl_FragColor = vec4(color, uOpacity);
   }
@@ -137,11 +138,11 @@ const routeVisuals: Record<string, {
   networkOpacity: number;
   wireOpacity: number;
 }> = {
-  home: { coreScale: 0.76, coreLight: 0.18, coreOpacity: 0.94, shellOpacity: 0.88, particleOpacity: 0.1, particleScale: 1, particleSize: 0.012, ringOpacity: 0.1, networkOpacity: 0.01, wireOpacity: 0.035 },
-  about: { coreScale: 0.5, coreLight: 0.09, coreOpacity: 0.72, shellOpacity: 0.36, particleOpacity: 0.025, particleScale: 0.88, particleSize: 0.009, ringOpacity: 0.025, networkOpacity: 0, wireOpacity: 0.015 },
-  portfolio: { coreScale: 0.34, coreLight: 0.07, coreOpacity: 0.62, shellOpacity: 0.56, particleOpacity: 0.95, particleScale: 1.22, particleSize: 0.02, ringOpacity: 0.08, networkOpacity: 0.2, wireOpacity: 0.15 },
-  stack: { coreScale: 0.46, coreLight: 0.11, coreOpacity: 0.8, shellOpacity: 0.48, particleOpacity: 0.12, particleScale: 1.04, particleSize: 0.011, ringOpacity: 0.34, networkOpacity: 0.055, wireOpacity: 0.25 },
-  contact: { coreScale: 0.68, coreLight: 0.16, coreOpacity: 0.88, shellOpacity: 0.72, particleOpacity: 0.16, particleScale: 1.06, particleSize: 0.014, ringOpacity: 0.12, networkOpacity: 0.025, wireOpacity: 0.06 },
+  home: { coreScale: 0.76, coreLight: 0.27, coreOpacity: 0.96, shellOpacity: 0.88, particleOpacity: 0.1, particleScale: 1, particleSize: 0.012, ringOpacity: 0.1, networkOpacity: 0.01, wireOpacity: 0.035 },
+  about: { coreScale: 0.5, coreLight: 0.13, coreOpacity: 0.74, shellOpacity: 0.36, particleOpacity: 0.025, particleScale: 0.88, particleSize: 0.009, ringOpacity: 0.025, networkOpacity: 0, wireOpacity: 0.015 },
+  portfolio: { coreScale: 0.34, coreLight: 0.1, coreOpacity: 0.66, shellOpacity: 0.56, particleOpacity: 0.95, particleScale: 1.22, particleSize: 0.02, ringOpacity: 0.08, networkOpacity: 0.2, wireOpacity: 0.15 },
+  stack: { coreScale: 0.46, coreLight: 0.17, coreOpacity: 0.83, shellOpacity: 0.48, particleOpacity: 0.12, particleScale: 1.04, particleSize: 0.011, ringOpacity: 0.34, networkOpacity: 0.055, wireOpacity: 0.25 },
+  contact: { coreScale: 0.68, coreLight: 0.24, coreOpacity: 0.9, shellOpacity: 0.72, particleOpacity: 0.16, particleScale: 1.06, particleSize: 0.014, ringOpacity: 0.12, networkOpacity: 0.025, wireOpacity: 0.06 },
 };
 
 class CoreErrorBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
@@ -437,6 +438,7 @@ export function SystemCore({ route, transitioning }: { route: string; transition
       ) : (
         <StaticSystemCore />
       )}
+      <div className="core-reflection" aria-hidden="true"><span /></div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import gsap from "gsap";
 import { SystemCore } from "@/components/system-core";
 import { TransitionLink, TransitionProvider } from "@/components/transition-link";
@@ -43,6 +43,47 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
   const firstRender = useRef(true);
   const safetyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [transitioning, setTransitioning] = useState(false);
+  const [introPhase, setIntroPhase] = useState<"running" | "leaving" | "done">(
+    isLanding ? "running" : "done",
+  );
+  const [introProgress, setIntroProgress] = useState(1);
+
+  useEffect(() => {
+    if (!isLanding || introPhase !== "running") return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let animationFrame = 0;
+
+    if (reduced) {
+      animationFrame = window.requestAnimationFrame(() => setIntroPhase("done"));
+      return () => window.cancelAnimationFrame(animationFrame);
+    }
+
+    const startedAt = performance.now();
+    const duration = 1450;
+    const tick = (now: number) => {
+      const elapsed = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - elapsed, 2.35);
+      setIntroProgress(Math.max(1, Math.round(eased * 100)));
+
+      if (elapsed < 1) {
+        animationFrame = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      setIntroProgress(100);
+      setIntroPhase("leaving");
+    };
+
+    animationFrame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [introPhase, isLanding]);
+
+  useEffect(() => {
+    if (introPhase !== "leaving") return;
+    const exitTimer = setTimeout(() => setIntroPhase("done"), 720);
+    return () => clearTimeout(exitTimer);
+  }, [introPhase]);
 
   function navigate(href: string) {
     if (href === pathname || transitioning) return;
@@ -117,11 +158,27 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
         className={`portfolio-shell ${isLanding ? "is-landing" : "is-internal"}`}
         data-route={routeName}
         data-transitioning={transitioning}
+        data-intro={isLanding ? introPhase : undefined}
         aria-busy={transitioning}
       >
         <a className="skip-link" href="#main-content">Skip to content</a>
         <div className="ambient-field" aria-hidden="true" />
         <SystemCore route={routeName} transitioning={transitioning} />
+        {isLanding && introPhase !== "done" && (
+          <div className="landing-opening" data-phase={introPhase} aria-hidden="true">
+            <div className="opening-meta">
+              <span>Forming system core</span>
+              <strong>{String(introProgress).padStart(2, "0")}%</strong>
+            </div>
+            <div
+              className="opening-meter"
+              style={{ "--intro-progress": `${introProgress}%` } as CSSProperties}
+            >
+              <span className="opening-meter-fill" />
+              <span className="opening-meter-core" />
+            </div>
+          </div>
+        )}
         {!isLanding && <InternalNavigation pathname={pathname} />}
         <div className="route-stage" ref={stage}>{children}</div>
       </div>

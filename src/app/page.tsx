@@ -17,7 +17,7 @@ export default function Home() {
 
       <section className="landing-hero" aria-labelledby="hero-title">
         <div className="landing-title">
-          <p>Information Systems student</p>
+          <p>Information Systems student · Telkom University</p>
           <h1 id="hero-title">Full-stack<br />developer.</h1>
         </div>
 
@@ -34,8 +34,8 @@ export default function Home() {
 
       <footer className="landing-footer">
         <div><span>Based in</span><strong>Bekasi / Bandung</strong></div>
-        <p aria-hidden="true">Move to influence the light</p>
-        <div><span>Focus</span><strong>Web · Systems · Product</strong></div>
+        <div><span>Status</span><strong>Open to internships &amp; collaborations</strong></div>
+        <div><span>Interaction</span><strong>Move cursor to shift the light</strong></div>
       </footer>
     </main>
   );
