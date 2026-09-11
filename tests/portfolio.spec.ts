@@ -8,7 +8,7 @@ test("homepage communicates Ricky's role and opens the portfolio", async ({ page
 
 test("portfolio index exposes selected work and the persistent navigation", async ({ page }) => {
   await page.goto("/portfolio");
-  await expect(page.getByRole("heading", { level: 1, name: /Selected systems/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /Selected work/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /RRS Studio/ })).toHaveAttribute("href", "/work/rrs-web");
   await expect(page.getByRole("link", { name: "Portfolio", exact: true })).toHaveAttribute("aria-current", "page");
   await expect(page.locator(".system-core-visual")).toHaveAttribute("data-state", "portfolio");

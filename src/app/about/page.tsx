@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
+import { ContributionHeatmap } from "@/components/contribution-heatmap";
 import { ArrowUpRight } from "@/components/icons";
 import { InternalPage } from "@/components/internal-page";
 import { TransitionLink } from "@/components/transition-link";
+import { getContributionCalendar } from "@/data/github";
 
 export const metadata: Metadata = {
   title: "About — Ricky",
   description: "About Ricky, a full-stack developer and Information Systems student in Indonesia.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const contributionCalendar = await getContributionCalendar("Radian-File");
+
   return (
     <InternalPage
       section="About"
@@ -59,6 +63,13 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+
+      {contributionCalendar && (
+        <ContributionHeatmap
+          calendar={contributionCalendar}
+          profileUrl="https://github.com/Radian-File"
+        />
+      )}
 
       <section className="about-contact" aria-labelledby="about-contact-title">
         <h2 id="about-contact-title">Have a project or role in mind?</h2>
