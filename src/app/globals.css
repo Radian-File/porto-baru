@@ -604,20 +604,23 @@ main[tabindex="-1"]:focus {
   max-width: 26rem;
 }
 
-.landing-intro > p {
+.landing-intro > p:first-child {
   margin: 0 0 1.8rem;
   color: #c9c7d0;
   font-size: clamp(1rem, 1.25vw, 1.15rem);
 }
 
 .landing-availability {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  margin: 1rem 0 0;
+  width: fit-content;
+  margin: 0.85rem 0 0;
   color: var(--muted);
   font-size: 0.77rem;
+  font-weight: 500;
   line-height: 1.45;
+  white-space: nowrap;
 }
 
 .landing-availability::before {
@@ -640,8 +643,9 @@ main[tabindex="-1"]:focus {
   grid-template-columns: minmax(0, 1fr) minmax(5rem, 0.65fr) minmax(0, 1fr);
   gap: clamp(0.5rem, 1.2vw, 1.25rem);
   align-items: center;
-  color: var(--quiet);
-  font-size: clamp(0.62rem, 0.67vw, 0.72rem);
+  color: var(--muted);
+  font-size: clamp(0.66rem, 0.72vw, 0.76rem);
+  font-weight: 500;
   letter-spacing: -0.01em;
   pointer-events: none;
   transform: translateX(-50%);
@@ -653,7 +657,10 @@ main[tabindex="-1"]:focus {
   transform: translateX(-50%) translateY(10px);
 }
 
-.trace-label { opacity: 0.72; }
+.trace-label {
+  opacity: 0.9;
+  text-shadow: 0 0 1.25rem rgba(154, 140, 255, 0.2);
+}
 .trace-label-end { text-align: right; }
 
 .trace-line {
@@ -2003,14 +2010,15 @@ main[tabindex="-1"]:focus {
     background: linear-gradient(90deg, transparent, rgba(2, 2, 7, 0.8) 15%);
   }
 
-  .landing-intro > p {
+  .landing-intro > p:first-child {
     margin-bottom: 1rem;
     font-size: 0.92rem;
   }
 
   .landing-availability {
-    margin-top: 0.8rem;
+    margin-top: 0.65rem;
     font-size: 0.72rem;
+    white-space: normal;
   }
 
   .landing-system-trace {

@@ -32,7 +32,7 @@ export default function Home() {
             <Copy en="Explore selected work" id="Lihat project pilihan" /> <ArrowUpRight />
           </TransitionLink>
           <p className="landing-availability">
-            <Copy en="Available for internships and product collaborations." id="Terbuka untuk internship dan kolaborasi product." />
+            <Copy en="Open to internships & collaborations." id="Open untuk internship & kolaborasi." />
           </p>
         </div>
       </section>
