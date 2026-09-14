@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
 type InternalPageProps = {
-  section: string;
+  section: ReactNode;
   title: ReactNode;
-  intro: string;
+  intro: ReactNode;
   children: ReactNode;
   className?: string;
 };

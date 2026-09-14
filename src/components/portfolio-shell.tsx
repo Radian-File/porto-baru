@@ -3,24 +3,26 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import gsap from "gsap";
+import { Copy, LanguageProvider, LanguageToggle, useLanguage } from "@/components/language";
 import { SystemCore } from "@/components/system-core";
 import { TransitionLink, TransitionProvider } from "@/components/transition-link";
 
-const navigation = [
-  { href: "/about", label: "About" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/stack", label: "Stack" },
-  { href: "/contact", label: "Contact" },
-];
-
 function InternalNavigation({ pathname }: { pathname: string }) {
+  const { language } = useLanguage();
+  const navigationItems = [
+    { href: "/about", label: language === "id" ? "Tentang" : "About" },
+    { href: "/portfolio", label: "Portfolio" },
+    { href: "/stack", label: "Stack" },
+    { href: "/contact", label: language === "id" ? "Kontak" : "Contact" },
+  ];
+
   return (
     <>
       <TransitionLink className="shell-wordmark" href="/" aria-label="Ricky, return to landing page">
         R<span>.</span>
       </TransitionLink>
-      <nav className="route-rail" aria-label="Portfolio sections">
-        {navigation.map((item) => {
+      <nav className="route-rail" aria-label={language === "id" ? "Bagian portfolio" : "Portfolio sections"}>
+        {navigationItems.map((item) => {
           const active = pathname === item.href || (item.href === "/portfolio" && pathname.startsWith("/work/"));
           return (
             <TransitionLink href={item.href} key={item.href} aria-current={active ? "page" : undefined}>
@@ -153,7 +155,8 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <TransitionProvider navigate={navigate}>
+    <LanguageProvider>
+      <TransitionProvider navigate={navigate}>
       <div
         className={`portfolio-shell ${isLanding ? "is-landing" : "is-internal"}`}
         data-route={routeName}
@@ -167,7 +170,7 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
         {isLanding && introPhase !== "done" && (
           <div className="landing-opening" data-phase={introPhase} aria-hidden="true">
             <div className="opening-meta">
-              <span>Forming system core</span>
+              <span><Copy en="Forming system core" id="Membentuk system core" /></span>
               <strong>{String(introProgress).padStart(2, "0")}%</strong>
             </div>
             <div
@@ -180,8 +183,10 @@ export function PortfolioShell({ children }: { children: ReactNode }) {
           </div>
         )}
         {!isLanding && <InternalNavigation pathname={pathname} />}
+        {!isLanding && <LanguageToggle className="shell-language-toggle" />}
         <div className="route-stage" ref={stage}>{children}</div>
       </div>
-    </TransitionProvider>
+      </TransitionProvider>
+    </LanguageProvider>
   );
 }
