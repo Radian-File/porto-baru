@@ -12,7 +12,16 @@ import {
   SiTypescript,
   SiVercel,
 } from "react-icons/si";
-import { LuBraces, LuShieldCheck, LuTestTubeDiagonal, LuWorkflow } from "react-icons/lu";
+import {
+  LuBotMessageSquare,
+  LuBrainCircuit,
+  LuBraces,
+  LuMessagesSquare,
+  LuScanText,
+  LuShieldCheck,
+  LuTestTubeDiagonal,
+  LuWorkflow,
+} from "react-icons/lu";
 import { InternalPage } from "@/components/internal-page";
 import { Copy } from "@/components/language";
 
@@ -28,40 +37,76 @@ type StackTool = {
   level: 1 | 2 | 3;
 };
 
+type StackGroup = {
+  stage: string;
+  label: { en: string; id: string };
+  title: { en: string; id: string };
+  note: { en: string; id: string };
+  intelligence?: boolean;
+  items: StackTool[];
+};
+
 const levelLabels = {
-  1: "Familiar",
-  2: "Working",
+  1: "Exploring",
+  2: "Working with",
   3: "Confident",
 } as const;
 
-const stackGroups: { title: { en: string; id: string }; note: { en: string; id: string }; items: StackTool[] }[] = [
+const stackGroups: StackGroup[] = [
   {
-    title: { en: "Core tools", id: "Core tools" },
-    note: { en: "The tools I reach for when building an application from the ground up.", id: "Tools yang paling sering saya pakai saat membangun aplikasi dari nol." },
+    stage: "01",
+    label: { en: "Interface", id: "Interface" },
+    title: { en: "Shape the experience", id: "Membentuk experience" },
+    note: { en: "Where product decisions become responsive, useful screens.", id: "Tempat keputusan product berubah jadi layar yang responsive dan berguna." },
     items: [
       { name: "TypeScript", description: { en: "Typed interfaces, application logic, and APIs.", id: "Interface, application logic, dan API yang lebih aman berkat types." }, icon: SiTypescript, level: 3 },
       { name: "React", description: { en: "Component systems and responsive product interfaces.", id: "Component system dan product interface yang responsive." }, icon: SiReact, level: 3 },
       { name: "Next.js", description: { en: "Production web applications across the full stack.", id: "Aplikasi web production untuk kebutuhan full-stack." }, icon: SiNextdotjs, level: 3 },
-      { name: "Node.js", description: { en: "Backend services and reliable application behavior.", id: "Backend service dan behavior aplikasi yang reliable." }, icon: SiNodedotjs, level: 2 },
-      { name: "PostgreSQL", description: { en: "Structured data models and application queries.", id: "Data model terstruktur dan query aplikasi." }, icon: SiPostgresql, level: 2 },
     ],
   },
   {
-    title: { en: "Product systems", id: "Product systems" },
-    note: { en: "The supporting layers that make a product dependable after the interface is built.", id: "Layer pendukung yang bikin product tetap dependable setelah interfacenya jadi." },
+    stage: "02",
+    label: { en: "Application", id: "Application" },
+    title: { en: "Build the system", id: "Membangun system" },
+    note: { en: "The services and boundaries that let an interface do real work.", id: "Service dan boundary yang bikin interface bisa melakukan pekerjaan nyata." },
     items: [
-      { name: "Prisma", description: { en: "Type-safe database access and schema management.", id: "Akses database yang type-safe dan schema management." }, icon: SiPrisma, level: 2 },
-      { name: "Supabase", description: { en: "Backend services, data, and practical product delivery.", id: "Backend service, data, dan delivery product yang practical." }, icon: SiSupabase, level: 2 },
+      { name: "Node.js", description: { en: "Backend services and reliable application behavior.", id: "Backend service dan behavior aplikasi yang reliable." }, icon: SiNodedotjs, level: 2 },
       { name: "REST APIs", description: { en: "Clear boundaries between clients, services, and data.", id: "Batas yang jelas antara client, service, dan data." }, icon: LuBraces, level: 3 },
       { name: "Authentication", description: { en: "Protected access and thoughtful account flows.", id: "Akses yang terlindungi dan account flow yang dipikirkan dengan baik." }, icon: LuShieldCheck, level: 2 },
-      { name: "Docker", description: { en: "Repeatable environments for development and delivery.", id: "Environment yang repeatable untuk development dan delivery." }, icon: SiDocker, level: 2 },
-      { name: "Vercel", description: { en: "Straightforward deployment for production web applications.", id: "Deployment aplikasi web production yang straightforward." }, icon: SiVercel, level: 2 },
     ],
   },
   {
-    title: { en: "Growing practice", id: "Sedang saya dalami" },
-    note: { en: "Tools I am actively using to strengthen quality, testing, and automation.", id: "Tools yang sedang saya pakai untuk memperkuat quality, testing, dan automation." },
+    stage: "03",
+    label: { en: "Data", id: "Data" },
+    title: { en: "Structure the data", id: "Menyusun data" },
+    note: { en: "The models and services that keep a product's information useful and connected.", id: "Model dan service yang menjaga informasi product tetap berguna dan saling terhubung." },
     items: [
+      { name: "PostgreSQL", description: { en: "Structured data models and application queries.", id: "Data model terstruktur dan query aplikasi." }, icon: SiPostgresql, level: 2 },
+      { name: "Prisma", description: { en: "Type-safe database access and schema management.", id: "Akses database yang type-safe dan schema management." }, icon: SiPrisma, level: 2 },
+      { name: "Supabase", description: { en: "Backend services, data, and practical product delivery.", id: "Backend service, data, dan delivery product yang practical." }, icon: SiSupabase, level: 2 },
+    ],
+  },
+  {
+    stage: "04",
+    label: { en: "AI & Agentic Systems", id: "AI & Agentic Systems" },
+    title: { en: "Orchestrate intelligence", id: "Membangun intelligent workflows" },
+    note: { en: "AI-assisted workflows that turn unstructured input into useful, reviewable actions.", id: "Workflow berbasis AI yang mengubah input tidak terstruktur jadi action yang berguna dan tetap bisa direview." },
+    intelligence: true,
+    items: [
+      { name: "LLM integration", description: { en: "Model APIs such as OpenRouter for product helpers and structured tasks.", id: "Model API seperti OpenRouter untuk product helper dan task yang terstruktur." }, icon: LuMessagesSquare, level: 2 },
+      { name: "Agentic workflows", description: { en: "Multi-step flows that turn an input into useful, reviewable actions.", id: "Flow multi-step yang mengubah input jadi action yang berguna dan bisa direview." }, icon: LuBotMessageSquare, level: 2 },
+      { name: "Extraction & OCR", description: { en: "Captions, OCR, and AI extraction combined into structured data.", id: "Caption, OCR, dan AI extraction yang dirangkai menjadi data terstruktur." }, icon: LuScanText, level: 2 },
+      { name: "Human-in-the-loop", description: { en: "Low-confidence output is held for review before it moves forward.", id: "Output dengan confidence rendah ditahan untuk direview sebelum diteruskan." }, icon: LuBrainCircuit, level: 2 },
+    ],
+  },
+  {
+    stage: "05",
+    label: { en: "Delivery & Quality", id: "Delivery & Quality" },
+    title: { en: "Ship with confidence", id: "Merilis dengan percaya diri" },
+    note: { en: "The habits and tools that make delivery repeatable and products easier to trust.", id: "Kebiasaan dan tools yang bikin delivery lebih repeatable dan product lebih mudah dipercaya." },
+    items: [
+      { name: "Docker", description: { en: "Repeatable environments for development and delivery.", id: "Environment yang repeatable untuk development dan delivery." }, icon: SiDocker, level: 2 },
+      { name: "Vercel", description: { en: "Straightforward deployment for production web applications.", id: "Deployment aplikasi web production yang straightforward." }, icon: SiVercel, level: 2 },
       { name: "Playwright", description: { en: "End-to-end checks for the journeys users actually take.", id: "End-to-end check untuk journey yang benar-benar dilalui user." }, icon: LuTestTubeDiagonal, level: 1 },
       { name: "Python", description: { en: "Scripting, small utilities, and data-oriented tasks.", id: "Scripting, utility kecil, dan task yang berhubungan dengan data." }, icon: SiPython, level: 2 },
       { name: "Automation", description: { en: "Removing repeatable work from product workflows.", id: "Mengurangi pekerjaan berulang dari product workflow." }, icon: LuWorkflow, level: 2 },
@@ -86,12 +131,12 @@ export default function StackPage() {
   return (
     <InternalPage
       section="Stack"
-      title={<Copy en={<>The tools behind<br />the work.</>} id={<>Tools di balik<br />setiap product.</>} />}
-      intro={<Copy en="A practical stack built through real products: from the interface people use to the systems that keep it dependable." id="Stack yang dibangun lewat product nyata: dari interface yang dipakai user sampai sistem yang bikin semuanya dependable." />}
+      title={<Copy en={<>The layers behind<br />the work.</>} id={<>Layer di balik<br />setiap product.</>} />}
+      intro={<Copy en="A practical build path: from the interface people use to the intelligence and systems that keep it dependable." id="Alur build yang practical: dari interface yang dipakai user sampai intelligence dan sistem yang bikin semuanya dependable." />}
       className="stack-page"
     >
       <div className="stack-intro">
-        <p><Copy en="Depth is shown as a working signal, not a rating." id="Level ini menunjukkan kedalaman pengalaman, bukan sekadar rating." /></p>
+        <p><Copy en="The map follows how I build. Levels show practical exposure, not a score." id="Peta ini mengikuti cara saya membangun. Level menunjukkan pengalaman di praktik, bukan sekadar skor." /></p>
         <div aria-label="Skill level key" className="stack-level-key">
           <StackLevel level={1} />
           <StackLevel level={2} />
@@ -100,8 +145,10 @@ export default function StackPage() {
       </div>
       <div className="stack-groups">
         {stackGroups.map((group) => (
-          <section key={group.title.en}>
+          <section key={group.stage} data-intelligence={group.intelligence || undefined}>
             <div className="stack-group-heading">
+              <span aria-hidden="true" className="stack-group-stage">{group.stage}</span>
+              <p className="stack-group-label"><Copy en={group.label.en} id={group.label.id} /></p>
               <h2><Copy en={group.title.en} id={group.title.id} /></h2>
               <p><Copy en={group.note.en} id={group.note.id} /></p>
             </div>
